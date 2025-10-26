@@ -20,10 +20,10 @@
   /* Buttons */
   .btn-primary {
     background: linear-gradient(135deg, hsl(142 69% 58%), hsl(142 69% 48%));
-    color: white;
+    color: hsl(142 100% 5%);
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;

@@ -184,7 +184,7 @@ export default function Metronome() {
           y1={y1}
           x2={x2}
           y2={y2}
-          stroke={i % 6 === 0 ? "#00ff99" : "#37474f"}
+          stroke={i % 6 === 0 ? "hsl(142 69% 58%)" : "#475569"}
           strokeWidth={i % 6 === 0 ? 2 : 1}
           strokeLinecap="round"
         />
@@ -228,7 +228,7 @@ export default function Metronome() {
             textAnchor={anchor}
             dominantBaseline="middle"
             fontSize="13"
-            fill="#00ff99"
+            fill="hsl(142 69% 58%)"
             style={{ userSelect: "none" }}
           >
             {r.name}
@@ -269,8 +269,8 @@ export default function Metronome() {
             cx={center}
             cy={center}
             r={radius + 6}
-            fill="#121212"
-            stroke="#37474f"
+            fill="#1e293b"
+            stroke="#475569"
             strokeWidth="2"
           />
           <g>{tickElements}</g>
@@ -280,16 +280,16 @@ export default function Metronome() {
             y1={center}
             x2={nx}
             y2={ny}
-            stroke="#00ff99"
+            stroke="hsl(142 69% 58%)"
             strokeWidth="3"
             strokeLinecap="round"
-            style={{ filter: "drop-shadow(0 0 6px #00ff99)" }}
+            style={{ filter: "drop-shadow(0 0 6px hsl(142 69% 58%))" }}
           />
           <circle
             cx={center}
             cy={center}
             r={60}
-            fill="#263238"
+            fill="#334155"
             stroke="#00000033"
           />
         </svg>
@@ -312,22 +312,22 @@ export default function Metronome() {
               width: 120,
               height: 120,
               borderRadius: "50%",
-              background: "linear-gradient(145deg, #1c1c1c, #2a2a2a)",
+              background: "linear-gradient(145deg, #1e293b, #334155)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              color: "#00ff99",
+              color: "hsl(142 69% 58%)",
               textAlign: "center",
               boxShadow:
-                "inset 0 -6px 12px rgba(0,255,128,0.25), 0 4px 12px rgba(0,0,0,0.6)",
+                "inset 0 -6px 12px hsl(142 69% 58% / 0.25), 0 4px 12px rgba(0,0,0,0.6)",
               pointerEvents: "auto",
               fontWeight: 700,
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ fontSize: 28 }}>{bpm}</div>
-            <div style={{ fontSize: 14, color: "#00ff99a0", marginTop: 4 }}>
+            <div style={{ fontSize: 14, color: "hsl(142 69% 58% / 0.7)", marginTop: 4 }}>
               {getTempoName(bpm)}
             </div>
           </div>
@@ -381,13 +381,10 @@ export default function Metronome() {
       style={{
         textAlign: "center",
         marginTop: 28,
-        fontFamily: "Inter, Roboto, sans-serif",
         padding: 24,
-        background: "#121212",
-        color: "#00ff99",
       }}
     >
-      <h2 style={{ margin: 0, fontSize: 20 }}>Metronome</h2>
+      <h2 className="text-3xl font-bold text-green-400 mb-8">Metronome</h2>
       <div
         style={{
           marginTop: 18,
@@ -403,15 +400,15 @@ export default function Metronome() {
         {/* Controls from second component */}
         <div style={{ minWidth: 280, textAlign: "left" }} id="controls">
           <div style={{ marginBottom: 12 }}>
-            <strong>{bpm} BPM</strong>
-            <div style={{ color: "#607d8b", fontSize: 13 }}>
+            <strong className="text-xl text-white">{bpm} BPM</strong>
+            <div className="text-gray-400 text-sm">
               {getTempoName(bpm)}
             </div>
           </div>
 
           {/* Manual BPM input */}
           <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 6 }}>Set BPM</label>
+            <label className="block mb-2 text-gray-300">Set BPM</label>
             <input
               type="number"
               min={MIN_BPM}
@@ -443,17 +440,12 @@ export default function Metronome() {
                   setBpmInput(String(clamped))
                 }
               }}
-              style={{
-                width: 120,
-                padding: "6px 8px",
-                borderRadius: 6,
-                border: "1px solid #e0e0e0",
-              }}
+              className="w-32 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400"
             />
           </div>
 
           <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 6 }}>
+            <label className="block mb-2 text-gray-300">
               Beats per measure
             </label>
             <input
@@ -462,17 +454,12 @@ export default function Metronome() {
               max="12"
               value={beatsPerMeasure}
               onChange={(e) => setBeatsPerMeasure(Number(e.target.value))}
-              style={{
-                width: 80,
-                padding: "6px 8px",
-                borderRadius: 6,
-                border: "1px solid #e0e0e0",
-              }}
+              className="w-24 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400"
             />
           </div>
 
           <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 6 }}>
+            <label className="block mb-2 text-gray-300">
               Accent beat
             </label>
             <input
@@ -481,12 +468,7 @@ export default function Metronome() {
               max={beatsPerMeasure}
               value={accentBeat}
               onChange={(e) => setAccentBeat(Number(e.target.value))}
-              style={{
-                width: 80,
-                padding: "6px 8px",
-                borderRadius: 6,
-                border: "1px solid #e0e0e0",
-              }}
+              className="w-24 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400"
             />
           </div>
 
@@ -495,35 +477,22 @@ export default function Metronome() {
           >
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 8,
-                border: "none",
-                background: isPlaying ? "#ef5350" : "#3949ab",
-                color: "white",
-                cursor: "pointer",
-              }}
+              className={isPlaying ? "btn-secondary" : "btn-primary"}
             >
               {isPlaying ? "Stop Metronome" : "Start Metronome"}
             </button>
 
             <button
               onClick={() => setIsDroneOn(!isDroneOn)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 8,
-                border: "1px solid #cfd8dc",
-                background: isDroneOn ? "#b2ff59" : "white",
-                cursor: "pointer",
-              }}
+              className={isDroneOn ? "btn-primary" : "btn-secondary"}
             >
               {isDroneOn ? "Stop Drone" : "Start Drone"}
             </button>
           </div>
 
           <div style={{ marginTop: 10 }}>
-            <label style={{ fontSize: 13 }}>Drone frequency (Hz)</label>
-            <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+            <label className="block mb-2 text-sm text-gray-300">Drone frequency (Hz)</label>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <input
                 type="number"
                 min="50"
@@ -531,26 +500,21 @@ export default function Metronome() {
                 step="0.1"
                 value={droneFreq}
                 onChange={(e) => setDroneFreq(Number(e.target.value))}
-                style={{
-                  width: 120,
-                  padding: "6px 8px",
-                  borderRadius: 6,
-                  border: "1px solid #e0e0e0",
-                }}
+                className="w-32 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400"
               />
               <div
                 style={{
                   width: 18,
                   height: 18,
                   borderRadius: "50%",
-                  background: isDroneOn ? "#00e676" : "#cfd8dc",
+                  background: isDroneOn ? "hsl(142 69% 58%)" : "#64748b",
                   boxShadow: isDroneOn
-                    ? "0 0 12px rgba(0,230,118,0.45)"
+                    ? "0 0 12px hsl(142 69% 58% / 0.5)"
                     : "none",
                 }}
               />
               {isDroneOn && (
-                <div style={{ color: "#455a64", fontSize: 13 }}>
+                <div className="text-gray-400 text-sm">
                   {droneFreq.toFixed(1)} Hz
                 </div>
               )}
@@ -580,11 +544,12 @@ export default function Metronome() {
                   borderRadius: "50%",
                   background: active
                     ? accent
-                      ? "#ff5252"
-                      : "#3949ab"
-                    : "#eceff1",
+                      ? "hsl(142 69% 58%)"
+                      : "hsl(142 50% 45%)"
+                    : "#475569",
                   transition: "transform 0.08s, background 0.08s",
                   transform: active ? "scale(1.25)" : "none",
+                  boxShadow: active && accent ? "0 0 12px hsl(142 69% 58% / 0.6)" : "none",
                 }}
               />
             )
