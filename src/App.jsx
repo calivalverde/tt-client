@@ -12,6 +12,7 @@ import CircleOfFifths from "./pages/CircleOfFifths"
 import Progressions from "./pages/Progressions"
 import Metronome from "./pages/Metronome"
 import ChordFinder from "./pages/ChordFinder"
+import PracticeRoom from "./pages/PracticeRoom"
 import Contact from "./pages/Contact"
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/progressions" element={<Progressions />} />
           <Route path="/metronome" element={<Metronome />} />
           <Route path="/chord-finder" element={<ChordFinder />} />
+          <Route path="/practice-room" element={<PracticeRoom />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>

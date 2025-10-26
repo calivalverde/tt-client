@@ -40,6 +40,7 @@ const NavMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
+    { label: "Practice Room", path: "/practice-room" },
     { label: "Scales", path: "/scales" },
     { label: "Chords", path: "/chords" },
     { label: "Circle of Fifths", path: "/circle-of-fifths" },
