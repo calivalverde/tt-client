@@ -11,6 +11,10 @@ function Header() {
             <Link
               to="/"
               className="text-white hover:text-green-400 transition-colors"
+              style={{
+                fontFamily: "Bungee, sans-serif",
+                textShadow: "0 0 20px hsl(142 69% 58% / .5)",
+              }}
             >
               TheTritone.com
             </Link>

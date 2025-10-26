@@ -40,14 +40,12 @@ const NavMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
-    { label: "Home", path: "/" },
     { label: "Scales", path: "/scales" },
     { label: "Chords", path: "/chords" },
     { label: "Circle of Fifths", path: "/circle-of-fifths" },
     { label: "Progressions", path: "/progressions" },
     { label: "Metronome", path: "/metronome" },
     { label: "Chord Finder", path: "/chord-finder" },
-    { label: "Contact Us", path: "/contact" },
   ]
 
   const linkClass = "px-3 py-2 rounded-md text-sm font-medium transition-colors"
