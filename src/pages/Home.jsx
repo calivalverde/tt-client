@@ -82,9 +82,8 @@ const Home = () => {
       <h1 className="text-5xl font-bungee mb-4">
         Welcome to <span className="text-green-400">TheTritone.com</span>
       </h1>
-      <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-12">
-        Your digital companion for mastering music theory. Interactive tools
-        designed for musicians, by musicians. Dive in and start your journey.
+      <p className="text-2xl font-mono text-green-400 mb-12">
+        Level up your chops
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {features.map((feature) => (

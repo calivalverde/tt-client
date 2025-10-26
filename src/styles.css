@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    --font-mono: "IBM Plex Mono", monospace;
+  }
+
   body {
     font-family: "Roboto", sans-serif;
   }
@@ -11,8 +15,16 @@
     font-family: "Bungee", sans-serif;
   }
 
-  .font-vt323 {
-    font-family: "VT323", monospace;
+  .font-mono {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+
+  .font-ibm-mono {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    line-height: 1.3;
   }
 }
 
