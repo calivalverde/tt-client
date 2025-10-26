@@ -1,18 +1,100 @@
-# React + Vite
+# The Tritone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive music theory educational web application designed to help musicians learn and explore music theory concepts.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Chord Finder** - Real-time chord detection using MIDI input devices
+- **Interactive Piano Keyboard** - Visual piano keyboard display
+- **Metronome** - Adjustable tempo metronome tool
+- **Scales Reference** - Explore various musical scales
+- **Chord Progressions** - Learn common chord progressions
+- **Circle of Fifths** - Interactive circle of fifths visualization
+- **Contact** - Get in touch with feedback or questions
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **React 19** - Modern React with latest features
+- **React Router 7** - Client-side routing
+- **Vite** - Fast build tool and dev server
+- **Tailwind CSS 4** - Utility-first styling
+- **Web MIDI API** - Real-time MIDI device integration
+- **Axios** - HTTP client for API requests
+- **Firebase Hosting** - Deployment platform
 
-Note: This will impact Vite dev & build performances.
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Node.js v22.18.0 (use `nvm use` if you have nvm installed)
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The app will be available at `http://localhost:5173` (or another port if 5173 is in use).
+
+## Development
+
+```bash
+# Run development server with HMR
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Run ESLint
+npm run lint
+```
+
+## MIDI Support
+
+To use the chord detection feature:
+
+1. Connect a MIDI keyboard or controller to your computer
+2. Navigate to the Chord Finder page
+3. Grant MIDI access permission when prompted
+4. Play notes on your MIDI device to see real-time chord detection
+
+**Note**: The Web MIDI API requires a secure context (HTTPS or localhost) and is currently supported in Chrome, Edge, and Opera browsers.
+
+## Deployment
+
+This project is configured for Firebase Hosting:
+
+```bash
+# Build the project
+npm run build
+
+# Deploy to Firebase
+firebase deploy
+```
+
+## Project Structure
+
+```
+src/
+├── api/           # API client configuration
+├── components/    # Reusable React components
+├── pages/         # Route-level page components
+├── utils/         # Utility functions (chord detection, etc.)
+├── App.jsx        # Main app with routing
+└── main.jsx       # App entry point
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests.
+
+## License
+
+This project is private and not currently licensed for public use.
