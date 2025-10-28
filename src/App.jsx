@@ -13,6 +13,7 @@ import Progressions from "./pages/Progressions"
 import Metronome from "./pages/Metronome"
 import ChordFinder from "./pages/ChordFinder"
 import PracticeRoom from "./pages/PracticeRoom"
+import AudioRecorder from "./pages/AudioRecorder"
 import Contact from "./pages/Contact"
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/metronome" element={<Metronome />} />
           <Route path="/chord-finder" element={<ChordFinder />} />
           <Route path="/practice-room" element={<PracticeRoom />} />
+          <Route path="/recorder" element={<AudioRecorder />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>

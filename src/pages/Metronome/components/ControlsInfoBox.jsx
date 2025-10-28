@@ -2,7 +2,7 @@ import React from "react"
 
 export function ControlsInfoBox() {
   return (
-    <div className="bg-gray-900 text-green-400 font-mono p-3 rounded-lg max-w-2xl mx-auto mt-12 text-sm text-left">
+    <div className="bg-gray-900 text-green-400 font-mono p-3 rounded-lg max-w-2xl mx-auto mt-6 text-sm text-left">
       <div className="font-bold mb-3">🎵 Metronome Controls:</div>
       <ul className="space-y-2 text-gray-300">
         <li>• Click or drag the tempo dial to set BPM</li>
