@@ -46,54 +46,44 @@ export default function Metronome() {
   }, [bpm])
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        marginTop: 28,
-        padding: 24,
-      }}
-    >
-      <h2 className="text-3xl font-bold text-green-400 mb-8">Metronome</h2>
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 to-gray-900 py-12 px-4">
+      <div className="max-w-6xl mx-auto text-center">
+        <h1 className="text-4xl font-bold text-white mb-2">Metronome</h1>
+        <p className="text-gray-300 mb-8">
+          Keep perfect time with adjustable tempo and time signatures
+        </p>
 
-      <div
-        style={{
-          marginTop: 18,
-          display: "flex",
-          gap: 32,
-          justifyContent: "center",
-          alignItems: "flex-start",
-          flexWrap: "wrap",
-        }}
-      >
-        <TempoDial bpm={bpm} setBpm={setBpm} />
+        <div className="flex gap-8 justify-center items-start flex-wrap mt-8">
+          <TempoDial bpm={bpm} setBpm={setBpm} />
 
-        <MetronomeControls
-          bpm={bpm}
-          bpmInput={bpmInput}
-          setBpm={setBpm}
-          setBpmInput={setBpmInput}
-          beatsPerMeasure={beatsPerMeasure}
-          setBeatsPerMeasure={setBeatsPerMeasure}
-          accentBeat={accentBeat}
-          setAccentBeat={setAccentBeat}
-          droneFreq={droneFreq}
-          setDroneFreq={setDroneFreq}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          isDroneOn={isDroneOn}
-          setIsDroneOn={setIsDroneOn}
-        />
+          <MetronomeControls
+            bpm={bpm}
+            bpmInput={bpmInput}
+            setBpm={setBpm}
+            setBpmInput={setBpmInput}
+            beatsPerMeasure={beatsPerMeasure}
+            setBeatsPerMeasure={setBeatsPerMeasure}
+            accentBeat={accentBeat}
+            setAccentBeat={setAccentBeat}
+            droneFreq={droneFreq}
+            setDroneFreq={setDroneFreq}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            isDroneOn={isDroneOn}
+            setIsDroneOn={setIsDroneOn}
+          />
+        </div>
+
+        {isPlaying && (
+          <BeatIndicator
+            beatsPerMeasure={beatsPerMeasure}
+            currentBeat={currentBeat}
+            accentBeat={accentBeat}
+          />
+        )}
+
+        <ControlsInfoBox />
       </div>
-
-      {isPlaying && (
-        <BeatIndicator
-          beatsPerMeasure={beatsPerMeasure}
-          currentBeat={currentBeat}
-          accentBeat={accentBeat}
-        />
-      )}
-
-      <ControlsInfoBox />
     </div>
   )
 }
