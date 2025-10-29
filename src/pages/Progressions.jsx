@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useTonality } from '../api/useMusicTheoryApi';
+import React, { useState } from "react";
+import { useTonality } from "../api/useMusicTheoryApi";
+import StaffNotation from "../components/StaffNotation";
 
 const Progressions = () => {
-  const [tonalityInput, setTonalityInput] = useState('C');
-  const [submittedTonality, setSubmittedTonality] = useState('');
+  const [tonalityInput, setTonalityInput] = useState("C");
+  const [submittedTonality, setSubmittedTonality] = useState("");
   const [selectedChords, setSelectedChords] = useState([]);
 
   // Fetch tonality data using React Query
@@ -11,8 +12,34 @@ const Progressions = () => {
     data: tonalityData,
     isLoading,
     isError,
-    error
+    error,
   } = useTonality(submittedTonality);
+
+  /**
+   * Get Roman numeral for a chord based on its position (1-7)
+   * @param {number} index - 0-based index of the chord
+   * @param {Object} chord - The chord object with description
+   * @returns {string} - Roman numeral (e.g., "I", "ii", "V7", "vii°")
+   */
+  const getRomanNumeral = (index, chord) => {
+    const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII"];
+    const position = index % 7; // Handle scales with more than 7 chords
+    const roman = romanNumerals[position];
+
+    // Determine if chord should be lowercase (minor or diminished)
+    const description = chord.description?.toLowerCase() || "";
+    const isMinor =
+      description.includes("minor") && !description.includes("major");
+    const isDiminished = description.includes("diminished");
+    const isAugmented = description.includes("augmented");
+
+    // Apply case based on chord quality
+    if (isMinor || isDiminished) {
+      return roman.toLowerCase();
+    }
+
+    return roman;
+  };
 
   const handleLoadTonality = (e) => {
     e.preventDefault();
@@ -37,10 +64,14 @@ const Progressions = () => {
   };
 
   const getChordProgression = () => {
-    if (!tonalityData || selectedChords.length === 0) return '';
+    if (!tonalityData || selectedChords.length === 0) return "";
     return selectedChords
-      .map((index) => tonalityData.diatonic_chords[index].chord_symbol)
-      .join(' - ');
+      .map((index) => {
+        const chord = tonalityData.diatonic_chords[index];
+        const romanNumeral = getRomanNumeral(index, chord);
+        return `${romanNumeral}${chord.chord_symbol}`;
+      })
+      .join(" - ");
   };
 
   const errorMessage = isError
@@ -64,8 +95,11 @@ const Progressions = () => {
         )}
 
         {/* Tonality Input */}
-        <form onSubmit={handleLoadTonality} className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex gap-4">
+        <form
+          onSubmit={handleLoadTonality}
+          className="bg-white rounded-lg shadow-lg p-6 mb-8"
+        >
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Enter Tonality
@@ -75,19 +109,20 @@ const Progressions = () => {
                 value={tonalityInput}
                 onChange={(e) => setTonalityInput(e.target.value)}
                 placeholder='e.g., "C", "Em", "F♯m", "B♭"'
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
               />
               <p className="mt-1 text-xs text-gray-500">
-                Examples: C (major), Em (E minor), F♯m (F sharp minor), B♭ (B flat major)
+                Examples: C (major), Em (E minor), F♯m (F sharp minor), B♭ (B
+                flat major)
               </p>
             </div>
-            <div className="flex items-end">
+            <div className="flex items-start sm:items-end sm:pb-5">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors"
+                className="w-full sm:w-auto px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors font-medium"
               >
-                {isLoading ? 'Loading...' : 'Load'}
+                {isLoading ? "Loading..." : "Load"}
               </button>
             </div>
           </div>
@@ -104,25 +139,27 @@ const Progressions = () => {
         {/* Tonality Data Display */}
         {!isLoading && tonalityData && (
           <div className="space-y-6">
-            {/* Description */}
-            {tonalityData.description && (
+            {/* Musical Staff Display */}
+            {tonalityData.scale && tonalityData.scale.length > 0 && (
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-3">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
                   {tonalityData.description}
                 </h2>
+                <div className="flex justify-center">
+                  <StaffNotation notes={tonalityData.scale} />
+                </div>
               </div>
             )}
 
             {/* Scale Notes */}
             {tonalityData.scale && tonalityData.scale.length > 0 && (
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Scale Notes</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Scale Notes
+                </h3>
                 <div className="flex flex-wrap gap-3">
                   {tonalityData.scale.map((note, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col items-center"
-                    >
+                    <div key={index} className="flex flex-col items-center">
                       <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-full flex items-center justify-center text-lg font-bold shadow-md">
                         {note}
                       </div>
@@ -136,60 +173,73 @@ const Progressions = () => {
             )}
 
             {/* Diatonic Chords */}
-            {tonalityData.diatonic_chords && tonalityData.diatonic_chords.length > 0 && (
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-semibold text-gray-800">Diatonic Chords</h3>
-                  {selectedChords.length > 0 && (
-                    <button
-                      onClick={clearSelection}
-                      className="text-sm text-purple-600 hover:text-purple-800"
-                    >
-                      Clear Selection
-                    </button>
-                  )}
-                </div>
-                <p className="text-sm text-gray-600 mb-4">
-                  Click on chords to build a progression
-                </p>
+            {tonalityData.diatonic_chords &&
+              tonalityData.diatonic_chords.length > 0 && (
+                <div className="bg-white rounded-lg shadow-lg p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      Diatonic Chords
+                    </h3>
+                    {selectedChords.length > 0 && (
+                      <button
+                        onClick={clearSelection}
+                        className="text-sm text-purple-600 hover:text-purple-800"
+                      >
+                        Clear Selection
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Click on chords to build a progression
+                  </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {tonalityData.diatonic_chords.map((chord, index) => (
-                    <div
-                      key={index}
-                      onClick={() => toggleChordSelection(index)}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        selectedChords.includes(index)
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-200 bg-gray-50 hover:border-purple-400 hover:bg-purple-50'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-2xl font-bold text-gray-800">
-                          {chord.chord_symbol}
-                        </span>
-                        {selectedChords.includes(index) && (
-                          <span className="text-sm font-semibold text-purple-600 bg-purple-200 px-2 py-1 rounded">
-                            {selectedChords.indexOf(index) + 1}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2">{chord.description}</p>
-                      <div className="flex flex-wrap gap-1">
-                        {chord.notes.map((note, noteIndex) => (
-                          <span
-                            key={noteIndex}
-                            className="text-xs px-2 py-1 bg-white text-gray-700 rounded border border-gray-200"
-                          >
-                            {note}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {tonalityData.diatonic_chords.map((chord, index) => {
+                      const romanNumeral = getRomanNumeral(index, chord);
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => toggleChordSelection(index)}
+                          className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                            selectedChords.includes(index)
+                              ? "border-purple-600 bg-purple-50"
+                              : "border-gray-200 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">
+                                {romanNumeral}
+                              </span>
+                              <span className="text-2xl font-bold text-gray-800">
+                                {chord.chord_symbol}
+                              </span>
+                            </div>
+                            {selectedChords.includes(index) && (
+                              <span className="text-sm font-semibold text-purple-600 bg-purple-200 px-2 py-1 rounded">
+                                {selectedChords.indexOf(index) + 1}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {chord.description}
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {chord.notes.map((note, noteIndex) => (
+                              <span
+                                key={noteIndex}
+                                className="text-xs px-2 py-1 bg-white text-gray-700 rounded border border-gray-200"
+                              >
+                                {note}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Selected Progression Display */}
             {selectedChords.length > 0 && (
@@ -199,7 +249,8 @@ const Progressions = () => {
                   {getChordProgression()}
                 </div>
                 <p className="text-sm text-purple-100 text-center mt-2">
-                  Selected {selectedChords.length} chord{selectedChords.length !== 1 ? 's' : ''}
+                  Selected {selectedChords.length} chord
+                  {selectedChords.length !== 1 ? "s" : ""}
                 </p>
               </div>
             )}

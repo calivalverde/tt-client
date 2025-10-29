@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useScaleQualities, useScaleNotes, useGenerateScale } from '../api/useMusicTheoryApi';
+import StaffNotation from '../components/StaffNotation';
 
 const Scales = () => {
   const [selectedQuality, setSelectedQuality] = useState('major');
@@ -84,8 +85,11 @@ const Scales = () => {
               <select
                 value={selectedQuality}
                 onChange={(e) => setSelectedQuality(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               >
+                {scaleQualities.length === 0 && (
+                  <option value="">Loading...</option>
+                )}
                 {scaleQualities.map((quality) => (
                   <option key={quality} value={quality}>
                     {quality.charAt(0).toUpperCase() + quality.slice(1).replace('_', ' ')}
@@ -102,9 +106,12 @@ const Scales = () => {
               <select
                 value={selectedNote}
                 onChange={(e) => setSelectedNote(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 disabled={availableNotes.length === 0}
               >
+                {availableNotes.length === 0 && (
+                  <option value="">Loading...</option>
+                )}
                 {availableNotes.map((note) => (
                   <option key={note} value={note}>
                     {note}
@@ -129,12 +136,20 @@ const Scales = () => {
               {selectedNote} {selectedQuality.charAt(0).toUpperCase() + selectedQuality.slice(1).replace('_', ' ')} Scale
             </h2>
 
-            {/* Scale Notes */}
-            {scaleData.notes && (
+            {/* Musical Staff Display */}
+            {(scaleData.notes || Array.isArray(scaleData)) && (
+              <div className="mb-8">
+                <h3 className="text-lg font-medium text-gray-700 mb-4">Musical Notation</h3>
+                <StaffNotation notes={Array.isArray(scaleData) ? scaleData : scaleData.notes} />
+              </div>
+            )}
+
+            {/* Scale Notes - Circular Display */}
+            {(scaleData.notes || Array.isArray(scaleData)) && (
               <div className="mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-4">Notes</h3>
                 <div className="flex flex-wrap gap-3 justify-center">
-                  {scaleData.notes.map((note, index) => (
+                  {(Array.isArray(scaleData) ? scaleData : scaleData.notes).map((note, index) => (
                     <div
                       key={index}
                       className="flex flex-col items-center"
