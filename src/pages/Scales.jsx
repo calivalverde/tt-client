@@ -145,6 +145,14 @@ const Scales = () => {
               {selectedNote} {selectedQuality.charAt(0).toUpperCase() + selectedQuality.slice(1).replace('_', ' ')} Scale
             </h2>
 
+            {/* Musical Staff Display */}
+            {scaleData.notes && (
+              <div className="mb-8">
+                <h3 className="text-lg font-medium text-gray-700 mb-4">Musical Notation</h3>
+                <StaffNotation notes={scaleData.notes} />
+              </div>
+            )}
+
             {/* Audio Player */}
             {audioData?.files && (
               <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
@@ -174,14 +182,6 @@ const Scales = () => {
             {audioLoading && scaleData.id && (
               <div className="mb-8 p-6 bg-gray-50 rounded-lg text-center">
                 <p className="text-gray-600">Loading audio...</p>
-              </div>
-            )}
-
-            {/* Musical Staff Display */}
-            {scaleData.notes && (
-              <div className="mb-8">
-                <h3 className="text-lg font-medium text-gray-700 mb-4">Musical Notation</h3>
-                <StaffNotation notes={scaleData.notes} />
               </div>
             )}
 
