@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useScaleQualities, useScaleNotes, useGenerateScale } from '../api/useMusicTheoryApi';
+import { useScaleQualityKeys, useScaleNotes, useGenerateScale } from '../api/useMusicTheoryApi';
 import StaffNotation from '../components/StaffNotation';
 
 const Scales = () => {
   const [selectedQuality, setSelectedQuality] = useState('major');
   const [selectedNote, setSelectedNote] = useState('');
 
-  // Fetch scale qualities
+  // Fetch scale quality keys
   const {
     data: scaleQualities = [],
     isError: qualitiesError,
     error: qualitiesErrorData
-  } = useScaleQualities();
+  } = useScaleQualityKeys();
 
   // Fetch available notes for selected quality
   const {

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   getScaleQualities,
+  getScaleQualityKeys,
   getScaleNotes,
   generateScale,
   getTonality,
@@ -9,13 +10,24 @@ import {
 } from './musicTheoryService';
 
 /**
- * React Query hook for fetching all scale qualities
+ * React Query hook for fetching all scale qualities (full object with labels and options)
  */
 export const useScaleQualities = () => {
   return useQuery({
     queryKey: ['scaleQualities'],
     queryFn: getScaleQualities,
     staleTime: Infinity, // Scale qualities rarely change
+  });
+};
+
+/**
+ * React Query hook for fetching scale quality keys
+ */
+export const useScaleQualityKeys = () => {
+  return useQuery({
+    queryKey: ['scaleQualityKeys'],
+    queryFn: getScaleQualityKeys,
+    staleTime: Infinity,
   });
 };
 

@@ -8,12 +8,22 @@ import axiosInstance from './axios';
 // ==================== DEFINITION ENDPOINTS ====================
 
 /**
- * Get all available scale qualities
- * @returns {Promise<string[]>} Array of scale quality strings
+ * Get all available scale qualities with labels and note options
+ * @returns {Promise<Object>} Scale qualities information
+ * @example { "major": { "label": "Major Scales", "options": ["C", "G", ...] }, ... }
  */
 export const getScaleQualities = async () => {
-  const response = await axiosInstance.get('/def/scale_qualities');
+  const response = await axiosInstance.get('/scales/qualities');
   return response.data;
+};
+
+/**
+ * Get array of scale quality keys
+ * @returns {Promise<string[]>} Array of scale quality keys (e.g., ["major", "minor", ...])
+ */
+export const getScaleQualityKeys = async () => {
+  const qualities = await getScaleQualities();
+  return Object.keys(qualities);
 };
 
 /**
@@ -22,8 +32,8 @@ export const getScaleQualities = async () => {
  * @returns {Promise<string[]>} Array of valid note strings
  */
 export const getScaleNotes = async (scaleQuality) => {
-  const response = await axiosInstance.get(`/def/notes/${scaleQuality}`);
-  return response.data;
+  const qualities = await getScaleQualities();
+  return qualities[scaleQuality]?.options || [];
 };
 
 // ==================== SCALE ENDPOINTS ====================
@@ -60,6 +70,76 @@ export const getTonality = async (tonalityStr) => {
   return response.data;
 };
 
+// ==================== CHORD ENDPOINTS ====================
+
+/**
+ * Identify a chord from a list of note names
+ * @param {string[]} notes - Array of note names (e.g., ["C", "E", "G"])
+ * @returns {Promise<Object>} Chord identification
+ * @returns {string} return.root_note - Root note of the chord
+ * @returns {string} return.chord_name - Full chord name (e.g., 'Cmaj7', 'Em')
+ * @returns {string} return.description - Chord type description
+ * @returns {string} return.chord_symbol - Chord symbol notation
+ * @returns {string[]} return.notes - Notes in the chord
+ */
+export const identifyChord = async (notes) => {
+  const notesString = notes.join(',');
+  const response = await axiosInstance.get('/chords/identify', {
+    params: { notes: notesString }
+  });
+  return response.data;
+};
+
+// ==================== INTERVAL ENDPOINTS ====================
+
+/**
+ * Identify the interval between two notes
+ * @param {string} note1 - First note (e.g., "C", "F♯", "B♭")
+ * @param {string} note2 - Second note (e.g., "E", "A", "D")
+ * @returns {Promise<Object>} Interval identification
+ * @returns {string} return.interval_name - Name of the interval
+ * @returns {number} return.semitones - Number of semitones
+ * @returns {string} return.note1 - First note
+ * @returns {string} return.note2 - Second note
+ * @returns {string[]} return.aliases - Common aliases for the interval
+ */
+export const identifyInterval = async (note1, note2) => {
+  const response = await axiosInstance.get('/intervals/identify', {
+    params: { note1, note2 }
+  });
+  return response.data;
+};
+
+/**
+ * Generate two notes from a root note and an interval
+ * @param {string} note - Root note (e.g., "C", "F♯", "B♭")
+ * @param {string} interval - Interval name or alias (e.g., "major3", "M3", "perfect5", "P5") or semitones (0-12)
+ * @returns {Promise<Object>} Generated notes
+ * @returns {string} return.note1 - Root note
+ * @returns {string} return.note2 - Second note
+ * @returns {string} return.interval_name - Name of the interval
+ * @returns {number} return.semitones - Number of semitones
+ * @returns {string[]} return.aliases - Common aliases for the interval
+ */
+export const generateInterval = async (note, interval) => {
+  const response = await axiosInstance.get('/intervals/generate', {
+    params: { note, interval }
+  });
+  return response.data;
+};
+
+/**
+ * Get a random interval
+ * @returns {Promise<Object>} Random interval
+ * @returns {string} return.interval_name - Name of the interval
+ * @returns {number} return.semitones - Number of semitones
+ * @returns {string[]} return.aliases - Common aliases for the interval
+ */
+export const getRandomInterval = async () => {
+  const response = await axiosInstance.get('/intervals/random');
+  return response.data;
+};
+
 // ==================== CONVENIENCE METHODS ====================
 
 /**
@@ -80,4 +160,26 @@ export const getDiatonicChords = async (tonalityStr) => {
 export const getScaleForTonality = async (tonalityStr) => {
   const tonality = await getTonality(tonalityStr);
   return tonality.scale || [];
+};
+
+/**
+ * Convert MIDI note numbers to note names
+ * @param {number[]} midiNotes - Array of MIDI note numbers (0-127)
+ * @returns {string[]} Array of unique note names
+ */
+export const midiNotesToNames = (midiNotes) => {
+  const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  // Get unique pitch classes
+  const uniquePitchClasses = [...new Set(midiNotes.map(note => note % 12))];
+  return uniquePitchClasses.map(pc => NOTE_NAMES[pc]);
+};
+
+/**
+ * Identify a chord from MIDI note numbers
+ * @param {number[]} midiNotes - Array of MIDI note numbers
+ * @returns {Promise<Object>} Chord identification from API
+ */
+export const identifyChordFromMidi = async (midiNotes) => {
+  const noteNames = midiNotesToNames(midiNotes);
+  return identifyChord(noteNames);
 };
