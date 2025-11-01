@@ -7,6 +7,7 @@ import {
   getTonality,
   getDiatonicChords,
   getScaleForTonality,
+  getAudioFile,
 } from './musicTheoryService';
 
 /**
@@ -91,5 +92,18 @@ export const useScaleForTonality = (tonalityStr) => {
     queryKey: ['scaleForTonality', tonalityStr],
     queryFn: () => getScaleForTonality(tonalityStr),
     enabled: !!tonalityStr,
+  });
+};
+
+/**
+ * React Query hook for fetching audio file by ID
+ * @param {string} audioId - Audio file ID (e.g., "C_MAJOR")
+ * @param {string} type - Resource type (default: "scale")
+ */
+export const useAudioFile = (audioId, type = 'scale') => {
+  return useQuery({
+    queryKey: ['audioFile', audioId, type],
+    queryFn: () => getAudioFile(audioId, type),
+    enabled: !!audioId,
   });
 };

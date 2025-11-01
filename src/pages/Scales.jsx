@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useScaleQualityKeys, useScaleNotes, useGenerateScale } from '../api/useMusicTheoryApi';
+import React, { useState, useEffect, useRef } from 'react';
+import { useScaleQualityKeys, useScaleNotes, useGenerateScale, useAudioFile } from '../api/useMusicTheoryApi';
 import StaffNotation from '../components/StaffNotation';
 
 const Scales = () => {
@@ -27,6 +27,15 @@ const Scales = () => {
     isError: scaleError,
     error: scaleErrorData
   } = useGenerateScale({ note: selectedNote, quality: selectedQuality });
+
+  // Fetch audio file using the scale ID
+  const {
+    data: audioData,
+    isLoading: audioLoading,
+  } = useAudioFile(scaleData?.id, 'scale');
+
+  // Audio player ref
+  const audioRef = useRef(null);
 
   // Set default quality when qualities load
   useEffect(() => {
@@ -136,20 +145,52 @@ const Scales = () => {
               {selectedNote} {selectedQuality.charAt(0).toUpperCase() + selectedQuality.slice(1).replace('_', ' ')} Scale
             </h2>
 
+            {/* Audio Player */}
+            {audioData?.files && (
+              <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                <h3 className="text-lg font-medium text-gray-700 mb-4 text-center">Listen to Scale</h3>
+                <div className="flex flex-col items-center gap-4">
+                  <audio
+                    ref={audioRef}
+                    controls
+                    className="w-full max-w-md"
+                  >
+                    <source src={audioData.files.mp3} type="audio/mpeg" />
+                    <source src={audioData.files.webm} type="audio/webm" />
+                    Your browser does not support the audio element.
+                  </audio>
+                  {audioData.bpm && (
+                    <div className="flex gap-4 text-sm text-gray-600">
+                      <span>BPM: {audioData.bpm}</span>
+                      {audioData.duration_ms && (
+                        <span>Duration: {(audioData.duration_ms / 1000).toFixed(1)}s</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {audioLoading && scaleData.id && (
+              <div className="mb-8 p-6 bg-gray-50 rounded-lg text-center">
+                <p className="text-gray-600">Loading audio...</p>
+              </div>
+            )}
+
             {/* Musical Staff Display */}
-            {(scaleData.notes || Array.isArray(scaleData)) && (
+            {scaleData.notes && (
               <div className="mb-8">
                 <h3 className="text-lg font-medium text-gray-700 mb-4">Musical Notation</h3>
-                <StaffNotation notes={Array.isArray(scaleData) ? scaleData : scaleData.notes} />
+                <StaffNotation notes={scaleData.notes} />
               </div>
             )}
 
             {/* Scale Notes - Circular Display */}
-            {(scaleData.notes || Array.isArray(scaleData)) && (
+            {scaleData.notes && (
               <div className="mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-4">Notes</h3>
                 <div className="flex flex-wrap gap-3 justify-center">
-                  {(Array.isArray(scaleData) ? scaleData : scaleData.notes).map((note, index) => (
+                  {scaleData.notes.map((note, index) => (
                     <div
                       key={index}
                       className="flex flex-col items-center"
@@ -163,30 +204,6 @@ const Scales = () => {
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {/* Scale Intervals */}
-            {scaleData.intervals && (
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-medium text-gray-700 mb-4">Intervals</h3>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {scaleData.intervals.map((interval, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                    >
-                      {interval}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Additional Info */}
-            {scaleData.description && (
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-gray-700 text-center">{scaleData.description}</p>
               </div>
             )}
           </div>

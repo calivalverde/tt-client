@@ -183,3 +183,28 @@ export const identifyChordFromMidi = async (midiNotes) => {
   const noteNames = midiNotesToNames(midiNotes);
   return identifyChord(noteNames);
 };
+
+// ==================== AUDIO ENDPOINTS ====================
+
+/**
+ * Get audio file metadata and URLs by ID
+ * @param {string} audioId - Audio file ID (e.g., "C_MAJOR", "FSHARP_NATURAL_MINOR")
+ * @param {string} type - Resource type (e.g., "scale")
+ * @returns {Promise<Object>} Audio resource with MP3/WebM URLs, duration, BPM
+ * @returns {string} return.id - Unique identifier
+ * @returns {string} return.name - Human-readable name
+ * @returns {string} return.type - Resource type
+ * @returns {string} return.root_note - Root note
+ * @returns {string[]} return.notes - Notes in the scale
+ * @returns {Object} return.files - Audio file URLs
+ * @returns {string} return.files.mp3 - MP3 file URL
+ * @returns {string} return.files.webm - WebM file URL
+ * @returns {number} return.duration_ms - Duration in milliseconds
+ * @returns {number} return.bpm - Beats per minute
+ */
+export const getAudioFile = async (audioId, type = 'scale') => {
+  const response = await axiosInstance.get(`/audio/files/${audioId}`, {
+    params: { type }
+  });
+  return response.data;
+};
